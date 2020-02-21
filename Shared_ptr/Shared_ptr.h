@@ -24,7 +24,8 @@ private:
 
 template<typename T>
 Shared_ptr<T>::Shared_ptr()                  // default constructor
-	: _elem(nullptr), _count(new size_t(0))
+	: _elem(nullptr), 
+	_count(new size_t(0))
 {
 }
 
@@ -44,19 +45,19 @@ Shared_ptr<T>::Shared_ptr(T* objName)      // constructor
 
 template<typename T>
 Shared_ptr<T>::Shared_ptr(const Shared_ptr& ptr1)   // copy constructor
+	: _elem(ptr1._elem), 
+	_count(ptr1._count)
 {
-		_elem = ptr1._elem;
-		_count = ptr1._count;
 		++(*_count);
 }
 
 template<typename T>
 Shared_ptr<T>::Shared_ptr(Shared_ptr&& ptr1)   // move copy constructor
+	: _elem(ptr1._elem),
+	_count(ptr1._count)
 {
-		_elem = ptr1._elem;
-		_count = ptr1._count;
-		ptr1._elem = nullptr;
-		ptr1._count = nullptr;
+	ptr1._elem = nullptr;
+	ptr1._count = nullptr;
 }
 
 template<typename T>
@@ -111,13 +112,13 @@ Shared_ptr<T>::~Shared_ptr()       // desctructor
 }
 
 template<typename T>
-T* Shared_ptr<T>::elem()
+T* Shared_ptr<T>::elem()      // return the pointer that points to the object
 {
 	return _elem;
 }
 
 template<typename T>
-size_t Shared_ptr<T>::count()
+size_t Shared_ptr<T>::count()         // return the number of pointers that point to the same object
 {
 	if (_count == nullptr)
 	{
