@@ -15,6 +15,13 @@ int main()
 	ptr3 = ptr1;
 	std::cout << "printing ptr3: " << ptr3.elem()->name() << "; ptr3._count = " << ptr3.count() << std::endl;
 
+	Shared_ptr<myClass> ptr4(std::move(ptr1));
+	std::cout << "printing ptr4: " << ptr4.elem()->name() << "; ptr4._count = " << ptr4.count() << std::endl;
+
+	Shared_ptr<myClass> ptr5;
+	ptr5 = std::move(ptr2);
+	std::cout << "printing ptr5: " << ptr5.elem()->name() << "; ptr5._count = " << ptr5.count() << std::endl;
+
 	return 0;
 }
 
