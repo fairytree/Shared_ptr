@@ -12,4 +12,4 @@ The Shared_ptr class consists of all the fundamental member functions of a typic
 6. move assignment operator
 7. destructor
 
-Notice that the program uses "myClass" as the datatype in which each step is explicitly printed to show the user how the shared_ptr actually works behind the screen.
+Notice that each step is explicitly printed out to show the user how the shared_ptr actually works behind the screen.
