@@ -34,6 +34,7 @@ Shared_ptr<T>::Shared_ptr(T* objName)      // constructor
 	if (objName) {
 		_elem = objName;
 		_count = new size_t(1);
+		std::cout << "The object shared_ptr points to has been created." << std::endl;
 	}
 	else {
 		_elem = nullptr;
@@ -100,7 +101,7 @@ Shared_ptr<T>::~Shared_ptr()       // desctructor
 		if ((*_count) == 0) {
 			delete _elem;
 			delete _count;
-			std::cout << "pointercount after shared_ptr destructor = 0" << std::endl;
+			std::cout << "The object shared_ptr points to has been deleted, and the pointercount after shared_ptr destructor = 0" << std::endl;
 		}
 		else
 		{

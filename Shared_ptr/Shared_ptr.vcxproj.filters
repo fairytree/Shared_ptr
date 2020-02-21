@@ -23,8 +23,5 @@
     <ClInclude Include="Shared_ptr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="myClass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
