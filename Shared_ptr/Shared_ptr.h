@@ -89,7 +89,6 @@ Shared_ptr<T>::~Shared_ptr()       // desctructor
 	if (_count == nullptr)
 	{
 		std::cout << "This pointer has been moved." << std::endl;
-		return;
 	}
 	else
 	{
