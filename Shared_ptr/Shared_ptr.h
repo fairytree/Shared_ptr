@@ -7,7 +7,7 @@ class Shared_ptr
 {
 public:
 	Shared_ptr();                                   // default constructor
-	Shared_ptr(T* objName);					        // constructor
+	explicit Shared_ptr(T* objName);			    // constructor
 	Shared_ptr(const Shared_ptr& ptr1);				// copy constructor
 	Shared_ptr(Shared_ptr&& ptr1);				    // move copy constructor
 	Shared_ptr& operator=(const Shared_ptr& rhs);	// assignment operator
@@ -24,9 +24,10 @@ private:
 
 template<typename T>
 Shared_ptr<T>::Shared_ptr()                  // default constructor
-	: _elem(nullptr), 
+	: _elem(nullptr),
 	_count(new size_t(0))
 {
+	std::cout << "default constructor called" << std::endl;
 }
 
 template<typename T>
@@ -35,21 +36,24 @@ Shared_ptr<T>::Shared_ptr(T* objName)      // constructor
 	if (objName) {
 		_elem = objName;
 		_count = new size_t(1);
-		std::cout << "The object shared_ptr points to has been created." << std::endl;
+		std::cout << "constructor with size_t(1) called" << std::endl;
 	}
 	else {
 		_elem = nullptr;
 		_count = new size_t(0);
+		std::cout << "constructor with size_t(0) called" << std::endl;
 	}
 }
 
 template<typename T>
 Shared_ptr<T>::Shared_ptr(const Shared_ptr& ptr1)   // copy constructor
-	: _elem(ptr1._elem), 
+	: _elem(ptr1._elem),
 	_count(ptr1._count)
 {
-		++(*_count);
+	++(*_count);
+	std::cout << "copy constructor called" << std::endl;
 }
+
 
 template<typename T>
 Shared_ptr<T>::Shared_ptr(Shared_ptr&& ptr1)   // move copy constructor
@@ -58,22 +62,26 @@ Shared_ptr<T>::Shared_ptr(Shared_ptr&& ptr1)   // move copy constructor
 {
 	ptr1._elem = nullptr;
 	ptr1._count = nullptr;
+	std::cout << "move copy constructor called" << std::endl;
 }
+
 
 template<typename T>
 Shared_ptr<T>& Shared_ptr<T>::operator=(const Shared_ptr& rhs)   // assignment operator
 {
-		delete _elem;
-		delete _count;
-		_elem = rhs._elem;
-		_count = rhs._count;
-		++(*_count);
-		return *this;
+	std::cout << "assignment operator called" << std::endl;
+	delete _elem;
+	delete _count;
+	_elem = rhs._elem;
+	_count = rhs._count;
+	++(*_count);
+	return *this;
 }
 
 template<typename T>
 Shared_ptr<T>& Shared_ptr<T>::operator=(Shared_ptr&& rhs)   // move assignment operator
 {
+	std::cout << "move assignment operator called" << std::endl;
 	delete _elem;
 	delete _count;
 	_elem = rhs._elem;
@@ -81,33 +89,42 @@ Shared_ptr<T>& Shared_ptr<T>::operator=(Shared_ptr&& rhs)   // move assignment o
 	rhs._elem = nullptr;
 	rhs._count = nullptr;
 	return *this;
+
 }
 
 template<typename T>
-Shared_ptr<T>::~Shared_ptr()       // desctructor
+Shared_ptr<T>::~Shared_ptr()       // destructor
 {
-	if (_count == nullptr)
+	if (_count == nullptr)         // ok to delete nullptr multiple times.
 	{
-		std::cout << "This pointer has been moved." << std::endl;
+		std::cout << "_count == nullptr. The shared_ptr has already been deleted." << std::endl;
+		return;
+	}
+
+	if (*_count == 0)         // *_count == 0 when call destructor right after default constructor.  
+	{
+		delete _elem;
+		delete _count;
+		std::cout << "*_count == 0 before destructor. Shared_ptr is now deleted." << std::endl;
+		return;
+	}
+
+	std::cout << "_count before destructor = " << *_count << std::endl;
+
+	--(*_count);   // _count is unsigned, "--" will make '0' a huge number. 
+
+	std::cout << "Shared_ptr destructor" << std::endl;
+
+	if (*_count == 0) {
+		delete _elem;
+		delete _count;
+		std::cout << "*_count == 0, shared_ptr is now deleted " << std::endl;
 	}
 	else
 	{
-		std::cout << "pointercount before shared_ptr destructor = " << *_count << std::endl;
-		
-		--(*_count);
-		
-		std::cout << "Shared_ptr destructor" << std::endl;
-
-		if ((*_count) == 0) {
-			delete _elem;
-			delete _count;
-			std::cout << "The object shared_ptr points to has been deleted, and the pointercount after shared_ptr destructor = 0" << std::endl;
-		}
-		else
-		{
-			std::cout << "pointercount after shared_ptr destructor = " << *_count << std::endl;
-		}
+		std::cout << "_count after destructor = " << *_count << std::endl;
 	}
+
 }
 
 template<typename T>
@@ -122,7 +139,7 @@ size_t Shared_ptr<T>::count()         // return the number of pointers that poin
 	if (_count == nullptr)
 	{
 		return 0;
-		std::cout << "this pointer is destroyed" << std::endl;
+		std::cout << "this shared_ptr has already been deleted." << std::endl;
 
 	}
 	else {
